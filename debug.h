@@ -1,6 +1,9 @@
 /**
-* \file         main.c
-* \brief        Main source file for CM4 core in the Find Me BLE Project.
+* \file         debug.h
+* \brief        Header file for the debug interface in the Find Me project.
+* 
+* The debug interface can be enabled/disable by properly setting the 
+* \ref DEBUG_ENABLED macro to either \ref ENABLED or \ref DISBALED.
 *
 * \author       Davide Marzorati
 */
@@ -29,30 +32,45 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 *******************************************************************************/
 
-#include "cy_pdl.h"
-#include "cyhal.h"
-#include "cybsp.h"
-#include "debug.h"
-
-int main(void)
-{
-    cy_rslt_t result;
-
-    /* Initialize the device and board peripherals */
-    result = cybsp_init() ;
-    if (result != CY_RSLT_SUCCESS)
-    {
-        CY_ASSERT(0);
-    }
-
+#ifndef __DEBUG_H__
+    #define __DEBUG_H__
     
+    #include "cybsp.h"
+    #include "cy_retarget_io.h"
 
-    /* Enable global interrupts */
-    __enable_irq();
+    #ifdef __cplusplus
+    extern "C" {
+    #endif /* __cplusplus */
 
-    for (;;)
-    {
+    /**
+     *  \brief Enable value. 
+     */
+    #define ENABLED 1
+
+    /**
+     *  \brief Disable value
+     */
+    #define DISABLED 0
+
+    /**
+     *  \brief Flag to enable/disable debug. 
+     * 
+     * You can set this macro to \ref ENABLED or \ref DISABLED
+     * to turn ON or OFF the debug interface, respectively.
+     */
+    #define DEBUG_ENABLED ENABLED
+
+    #if (DEBUG_ENABLED == ENABLED)
+        #define DEBUG_START()       (cy_retarget_io_init(CYBSP_DEBUG_UART_TX, CYBSP_DEBUG_UART_RX, CY_RETARGET_IO_BAUDRATE))
+        #define DEBUG_PRINTF(...)   (printf(__VA_ARGS__))
+    #else
+        #define DEBUG_START()
+        #define DEBUG_PRINTF(...)
+    #endif
+
+    void ShowError(void);
+
+    #ifdef __cplusplus
     }
-}
-
-/* [] END OF FILE */
+    #endif /* __cplusplus */
+#endif

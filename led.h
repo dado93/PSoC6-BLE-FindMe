@@ -1,6 +1,6 @@
 /**
-* \file         BLEFindMe.h
-* \brief        Header file for BLE Interface in the Find Me project.
+* \file         led.h
+* \brief        Header file for LED Interface in the Find Me project.
 *
 * \author       Davide Marzorati
 */
@@ -28,20 +28,14 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
 *******************************************************************************/
+#ifndef __LED_H__
+    #define __LED_H__
 
-#ifndef __BLE_FINDME_H__
-    #define __BLE_FINDME_H__
+    #include "cybsp.h"
 
-    #ifdef __cplusplus
-    extern "C" {
-    #endif
+    #define LED_ON  0
+    #define LED_OFF 1
 
-    void BLE_FindMeInit(void);
-
-    void BLE_FindMeProcess(void);
-
-    #ifdef __cplusplus
-    }
-    #endif
+    #define CONNECTION_LED CYBSP_LED3
+    #define ALERT_LED      CYBSP_LED4
 #endif
-

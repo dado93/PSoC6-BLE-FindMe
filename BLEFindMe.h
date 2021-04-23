@@ -1,14 +1,11 @@
 /**
- * \file            debug.c                    
- * \brief           Source file for debug interface. 
- *                   
- * Source file for the cm4 debug interface, that allows
- * showing debug messages on a serial port. 
- * 
- * \author Davide Marzorati
- */ 
- 
- /*******************************************************************************
+* \file         BLEFindMe.h
+* \brief        Header file for BLE Interface in the Find Me project.
+*
+* \author       Davide Marzorati
+*/
+
+/*******************************************************************************
  * Copyright (c) 2021 Marzorati Davide
  *
  * Permission is hereby granted, free of charge, to any person
@@ -32,19 +29,19 @@
  * OTHER DEALINGS IN THE SOFTWARE.
 *******************************************************************************/
 
-#include "debug.h"
-#include "cy_pdl.h"
-#include "cyhal.h"
-#include "cybsp.h"
+#ifndef __BLE_FINDME_H__
+    #define __BLE_FINDME_H__
 
-/**
- * \brief       Display error message.
- * 
- * The current implemenation turns on all LEDs when 
- * there is an error in the application. 
- */
-void ShowError(void)
-{
-    cyhal_gpio_write(CYBSP_LED3, 0);
-    cyhal_gpio_write(CYBSP_LED4, 0);
-}
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
+
+    void BLEFindMe_Init(void);
+
+    void BLEFindMe_Process(void);
+
+    #ifdef __cplusplus
+    }
+    #endif
+#endif
+

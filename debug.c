@@ -1,11 +1,14 @@
 /**
-* \file         BLEFindMe.c
-* \brief        Source file for BLE Interface in the Find Me project.
-*
-* \author       Davide Marzorati
-*/
-
-/*******************************************************************************
+ * \file            debug.c                    
+ * \brief           Source file for debug interface. 
+ *                   
+ * Source file for the cm4 debug interface, that allows
+ * showing debug messages on a serial port. 
+ * 
+ * \author Davide Marzorati
+ */ 
+ 
+ /*******************************************************************************
  * Copyright (c) 2021 Marzorati Davide
  *
  * Permission is hereby granted, free of charge, to any person
@@ -28,35 +31,26 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
 *******************************************************************************/
-#include "BLEFindMe.h"
+
+#include "debug.h"
 #include "cy_pdl.h"
 #include "cyhal.h"
 #include "cybsp.h"
-#include "cycfg_ble.h"
 
-static cy_stc_ble_conn_handle_t connection_handle;
+/**
+ * \brief       Display error message.
+ * 
+ * The current implemenation turns on all LEDs when 
+ * there is an error in the application. 
+ */
 
-static uint8_t alert_level;
+#include "debug.h"
+#include "led.h"
 
-static void BLEFindMe_EnterLowPowerMode(void);
-
-
-
-void BLEFindMe_Init(void)
+void ShowError(void)
 {
-    /* Initialize debug interface */
-    DEBUG_START();
-    DEBUG_PRINTF("\f");
-    DEBUG_PRINTF("PSoC MCU BLE - Find Me Example\r\n");
+    cyhal_gpio_write(CONNECTION_LED, 0);
+    cyhal_gpio_write(ALERT_LED, 0);
 
-}
-
-void BLEFindMe_Process(void)
-{
-
-}
-
-void BLEFindMe_EnterLowPowerMode(void)
-{
-    Cy_SysPm_DeepSleep(CY_SYSPM_WAIT_FOR_INTERRUPT);
+    CY_ASSERT( 0!=0 );
 }

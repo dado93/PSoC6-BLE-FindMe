@@ -7,7 +7,7 @@
 #
 ################################################################################
 # \copyright
-# Copyright 2018-2021 Cypress Semiconductor Corporation
+# Copyright 2018-2020 Cypress Semiconductor Corporation
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,7 +40,7 @@ TARGET=CY8CPROTO-063-BLE
 # 
 # If APPNAME is edited, ensure to update or regenerate launch 
 # configurations for your IDE.
-APPNAME=cy_m0p_image
+APPNAME=mtb-example-psoc6-empty-app
 
 # Name of toolchain to use. Options include:
 #
@@ -79,13 +79,10 @@ VERBOSE=
 # ... then code in directories named COMPONENT_foo and COMPONENT_bar will be
 # added to the build
 #
-COMPONENTS=
+COMPONENTS+=BLESS_HOST BLESS_CONTROLLER
 
 # Like COMPONENTS, but disable optional code that was enabled by default.
 DISABLE_COMPONENTS=
-
-# Set this application to run at the CM0+
-CORE=CM0P
 
 # By default the build system automatically looks in the Makefile's directory
 # tree for source code and builds it. The SOURCES variable can be used to
@@ -153,7 +150,7 @@ CY_APP_PATH=
 # the CY_GETLIBS_SHARED_PATH variable. The default location is one directory level 
 # above the current app directory.
 # This is used with CY_GETLIBS_SHARED_NAME variable, which specifies the directory name.
-CY_GETLIBS_SHARED_PATH=../../
+CY_GETLIBS_SHARED_PATH=../
 
 # Directory name of the shared repo location.
 #
@@ -176,7 +173,7 @@ CY_TOOLS_PATHS ?= $(wildcard \
 
 # If you install ModusToolbox IDE in a custom location, add the path to its
 # "tools_X.Y" folder (where X and Y are the version number of the tools
-# folder).
+# folder). Make sure you use forward slashes.
 CY_TOOLS_PATHS+=
 
 # Default to the newest installed tools folder, or the users override (if it's
@@ -184,7 +181,7 @@ CY_TOOLS_PATHS+=
 CY_TOOLS_DIR=$(lastword $(sort $(wildcard $(CY_TOOLS_PATHS))))
 
 ifeq ($(CY_TOOLS_DIR),)
-$(error Unable to find any of the available CY_TOOLS_PATHS -- $(CY_TOOLS_PATHS))
+$(error Unable to find any of the available CY_TOOLS_PATHS -- $(CY_TOOLS_PATHS). On Windows, use forward slashes.)
 endif
 
 $(info Tools Directory: $(CY_TOOLS_DIR))
