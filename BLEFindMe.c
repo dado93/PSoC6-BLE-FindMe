@@ -38,13 +38,24 @@
 #include "debug.h"
 #include "led.h"
 
+/**
+ * \brief           BLE Connection handle.
+ */ 
 static cy_stc_ble_conn_handle_t connection_handle;
 
+/**
+ * \brief           Current alert level for Immediate Alert Service.
+ */ 
 static uint8_t alert_level;
 
+/**
+ * \brief           Timer flag updated every 1 second, for LED toggling.
+ */ 
 static uint8_t timer_flag = 1;
 
-/* The variables to initialize the BLE stack timer to get a 1-second interval */
+/**
+ *  \brief          Variable to get 1-second timer from BLE Timer.
+ */
 static cy_stc_ble_timer_info_t  timer_param = { .timeout = 1u /* second */ };
 
 static void BLEFindMe_EnterLowPowerMode(void);
@@ -52,6 +63,12 @@ void BLEFindMe_StackEventHandler(uint32_t event, void* event_parameters);
 void BLEFindMe_IasEventHandler(uint32_t event, void* event_parameters);
 void BLEFindMe_Process(void);
 
+/**
+ * \brief           BLE Interrupt Handler.
+ * 
+ *                  It is required to implement this handler
+ *                  as the code is running only on the CM4.
+ */ 
 static void BlessInterrupt(void)
 {
     /* Call interrupt processing */
@@ -60,15 +77,15 @@ static void BlessInterrupt(void)
 
 
 /**
- *  \brief Initialize BLE Find Me components.
+ *  \brief          Initialize BLE Find Me components.
  * 
- * This function initializes all the components required for proper
- * functionality of the BLE component:
- *      - the BLE
- *      - the debug interface
- *      - the GPIOs connected to the LEDs
- *      - the GPIOs connected to a switch to leave hibernate mode
- *      - the BLESS isr
+ *                  This function initializes all the components required for proper
+ *                  functionality of the BLE component:
+ *                      - the BLE
+ *                      - the debug interface
+ *                      - the GPIOs connected to the LEDs
+ *                      - the GPIOs connected to a switch to leave hibernate mode
+ *                      - the BLESS isr
  */
 void BLEFindMe_Init(void)
 {
@@ -136,6 +153,12 @@ void BLEFindMe_Init(void)
     Cy_BLE_IAS_RegisterAttrCallback(BLEFindMe_IasEventHandler);
 }
 
+/**
+ * \brief           Main processing loop for BLE Find Me.
+ * 
+ *                  Check current status of \ref alert_level variable and update
+ *                  the LED accordingly.
+ */ 
 void BLEFindMe_Process(void)
 {
     Cy_BLE_ProcessEvents();
@@ -170,13 +193,17 @@ void BLEFindMe_Process(void)
 /**
  *  \brief          Enter Low Power mode. 
  * 
- * This function is called 
+ *                  This function is called as many times as possible
+ *                  to save on battery life.
  */
 void BLEFindMe_EnterLowPowerMode(void)
 {
     Cy_SysPm_DeepSleep(CY_SYSPM_WAIT_FOR_INTERRUPT);
 }
 
+/**
+ * \brief           BLE Stack event handler.
+ */ 
 void BLEFindMe_StackEventHandler(uint32_t event, void* event_parameters)
 {
     cy_en_ble_api_result_t result;
@@ -242,14 +269,12 @@ void BLEFindMe_StackEventHandler(uint32_t event, void* event_parameters)
             DEBUG_PRINTF("CY_BLE_EVT_GAP_ENCHANCE_CONN_COMPLETE\r\n");
             break;
         case CY_BLE_EVT_TIMEOUT:
-            DEBUG_PRINTF("CY_BLE_EVT_TIMEOUT\r\n");
             // Check if generic timeout event by proper casting of parameters
             if ( (((cy_stc_ble_timeout_param_t *) event_parameters)->reasonCode == CY_BLE_GENERIC_APP_TO)
                     && (((cy_stc_ble_timeout_param_t *) event_parameters)->timerHandle == timer_param.timerHandle) )
             {
                 timer_flag = timer_flag + 1;
                 // Update LED state
-                DEBUG_PRINTF("tiemr_flag: %d\r\n",timer_flag);
                 if (Cy_BLE_GetAdvertisementState() == CY_BLE_ADV_STATE_ADVERTISING)
                 {
                     // Toogle connection LED during advertising
@@ -276,6 +301,9 @@ void BLEFindMe_StackEventHandler(uint32_t event, void* event_parameters)
     }
 }
 
+/**
+ *  \brief          BLE Immediate Alert Service Handler.
+ */ 
 void BLEFindMe_IasEventHandler(uint32_t event, void* event_parameters)
 {
     if (event == CY_BLE_EVT_IASS_WRITE_CHAR_CMD)
