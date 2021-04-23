@@ -1,6 +1,6 @@
 /**
-* \file         BLEFindMe.c
-* \brief        Source file for BLE Interface in the Find Me project.
+* \file         BLEFindMe.h
+* \brief        Header file for BLE Interface in the Find Me project.
 *
 * \author       Davide Marzorati
 */
@@ -28,35 +28,20 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
 *******************************************************************************/
-#include "BLEFindMe.h"
-#include "cy_pdl.h"
-#include "cyhal.h"
-#include "cybsp.h"
-#include "cycfg_ble.h"
 
-static cy_stc_ble_conn_handle_t connection_handle;
+#ifndef __BLE_FINDME_H__
+    #define __BLE_FINDME_H__
 
-static uint8_t alert_level;
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
 
-static void BLEFindMe_EnterLowPowerMode(void);
+    void BLE_FindMeInit(void);
 
+    void BLE_FindMeProcess(void);
 
+    #ifdef __cplusplus
+    }
+    #endif
+#endif
 
-void BLEFindMe_Init(void)
-{
-    /* Initialize debug interface */
-    DEBUG_START();
-    DEBUG_PRINTF("\f");
-    DEBUG_PRINTF("PSoC MCU BLE - Find Me Example\r\n");
-
-}
-
-void BLEFindMe_Process(void)
-{
-
-}
-
-void BLEFindMe_EnterLowPowerMode(void)
-{
-    Cy_SysPm_DeepSleep(CY_SYSPM_WAIT_FOR_INTERRUPT);
-}
